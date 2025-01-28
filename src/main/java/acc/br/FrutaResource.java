@@ -16,13 +16,27 @@ public class FrutaResource {
 
     @GET
     public List<Fruta> list() {
-        return Fruta.listAll(); // Retorna todas as frutas salvas no banco
+        return Fruta.listAll();
     }
 
     @POST
     @Transactional
     public Response novaFruta(Fruta fruta) {
-        fruta.persist(); // Salva no banco
-        return Response.status(Response.Status.CREATED).entity(fruta).build(); // Retorna a fruta com o ID gerado
+        if (fruta.id != null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("ID não deve ser enviado no corpo da requisição")
+                    .build();
+        }
+
+        fruta.persist(); // Hibernate gera o ID automaticamente
+        return Response.status(Response.Status.CREATED).entity(fruta).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    public Response deletarFruta(@PathParam("id") Long id) {
+        boolean deleted = Fruta.deleteById(id);
+        return deleted ? Response.noContent().build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 }

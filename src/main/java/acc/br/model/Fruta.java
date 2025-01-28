@@ -12,8 +12,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 @SequenceGenerator(
         name = "fruta_seq",
         sequenceName = "fruta_sequence",
-        allocationSize = 1,
-        initialValue = 1
+        allocationSize = 1
 )
 public class Fruta extends PanacheEntityBase {
 
